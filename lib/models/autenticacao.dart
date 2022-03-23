@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:challenge_hmv/models/erro_tratado.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 class Autenticacao with ChangeNotifier {
   static const _url = "http://127.0.0.1:8081/api/pacientes/";
