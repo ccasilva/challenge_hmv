@@ -170,6 +170,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
                           onPressed: _submit,
                           child: const Text("REGISTRAR"),
                           style: ElevatedButton.styleFrom(
+                            primary: azulHmv,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(90),
                             ),
