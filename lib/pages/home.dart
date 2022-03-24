@@ -9,7 +9,7 @@ import 'hexacolorcode.dart';
 
 class Home extends StatefulWidget {
   final Usuario usuario;
-  const Home({Key key, @required this.usuario}) : super(key: key);
+  const Home({Key key, @required Usuario this.usuario}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            informativoPaciente(context),
+            informativoPaciente(context,this.widget.usuario),
             opcoesDoPaciente(context),
             textoInformativo(context)
           ],
@@ -34,7 +34,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget informativoPaciente(BuildContext context) {
+Widget informativoPaciente(BuildContext context, Usuario usuario) {
+
   return Stack(children: [
     Container(
       margin: EdgeInsets.only(
@@ -65,15 +66,15 @@ Widget informativoPaciente(BuildContext context) {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text("Bom dia!",
+        children: [
+          const Text("Bom dia!",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           Padding(
-            padding: EdgeInsets.only(top: 8, bottom: 12.0),
-            child: Text('CARLOS SILVA',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            padding: const EdgeInsets.only(top: 8, bottom: 12.0),
+            child: Text( usuario.nome,
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           ),
-          Text(
+          const Text(
             "Você ainda não realizou nenhuma consulta.",
             style: TextStyle(
               fontSize: 11,

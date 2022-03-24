@@ -1,3 +1,4 @@
+import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/pages/registrar_page.dart';
 import 'package:challenge_hmv/utils/color.dart';
 import 'package:challenge_hmv/widgets/herder_container.dart';
@@ -20,16 +21,17 @@ class _LoginPageState extends State<LoginPage> {
   void _showErroLogim(String titulo, String msg) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(titulo),
-        content: Text(msg),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
-          )
-        ],
-      ),
+      builder: (ctx) =>
+          AlertDialog(
+            title: Text(titulo),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Fechar'),
+              )
+            ],
+          ),
     );
   }
 
@@ -46,6 +48,9 @@ class _LoginPageState extends State<LoginPage> {
       _senhaSalva = prefs.getString("SENHA");
     });
 
+    print('Email recuperado => {$_emailSalvo}');
+    print('Senha recuperada => {$_senhaSalva}');
+
     if (_emailSalvo.isEmpty) {
       _showErroLogim("Erro", "Usuário não cadastrado.");
     } else {
@@ -61,9 +66,15 @@ class _LoginPageState extends State<LoginPage> {
         }
         setState(() => isLoading = false);
 
+        Usuario usuario = Usuario(
+          id: prefs.getString("ID"),
+          nome: prefs.getString("NOME"),
+          email: prefs.getString("EMAIL"),
+          senha: prefs.getString("SENHA"),);
+
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => Home(usuario: usuario)),
         );
       }
     }
@@ -73,7 +84,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
+    final isKeyboard = MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom != 0;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -104,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.email),
                           ),
                           onSaved: (usuario) =>
-                              logarApp['usuario'] = usuario ?? '',
+                          logarApp['usuario'] = usuario ?? '',
                         ),
                       ),
                       Container(
