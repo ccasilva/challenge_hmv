@@ -1,14 +1,13 @@
 import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/pages/cadastrar_paciente.dart';
-import 'package:challenge_hmv/pages/patient.dart';
 import 'package:challenge_hmv/utils/color.dart';
 import 'package:flutter/material.dart';
-
 import 'bottombar.dart';
 import 'hexacolorcode.dart';
 
 class Home extends StatefulWidget {
   final Usuario usuario;
+
   const Home({Key key, @required Usuario this.usuario}) : super(key: key);
 
   @override
@@ -23,8 +22,8 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            informativoPaciente(context,this.widget.usuario),
-            opcoesDoPaciente(context),
+            informativoPaciente(context, this.widget.usuario),
+            opcoesDoPaciente(context, this.widget.usuario),
             textoInformativo(context)
           ],
         ),
@@ -35,63 +34,66 @@ class _HomeState extends State<Home> {
 }
 
 Widget informativoPaciente(BuildContext context, Usuario usuario) {
-
-  return Stack(children: [
-    Container(
-      margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.15,
-        bottom: MediaQuery.of(context).size.height * 0.020,
-        left: MediaQuery.of(context).size.width * 0.050,
-        right: MediaQuery.of(context).size.width * 0.050,
-      ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.060,
-        left: MediaQuery.of(context).size.width * 0.040,
-        bottom: MediaQuery.of(context).size.height * 0.030,
-        right: MediaQuery.of(context).size.width * 0.020,
-      ),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(width: 0, color: Colors.white),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 5,
-            blurRadius: 10,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Bom dia!",
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-          Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 12.0),
-            child: Text( usuario.nome,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-          ),
-          const Text(
-            "Você ainda não realizou nenhuma consulta.",
-            style: TextStyle(
-              fontSize: 11,
+  return Stack(
+    children: [
+      Container(
+        margin: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.15,
+          bottom: MediaQuery.of(context).size.height * 0.020,
+          left: MediaQuery.of(context).size.width * 0.050,
+          right: MediaQuery.of(context).size.width * 0.050,
+        ),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.060,
+          left: MediaQuery.of(context).size.width * 0.040,
+          bottom: MediaQuery.of(context).size.height * 0.030,
+          right: MediaQuery.of(context).size.width * 0.020,
+        ),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: 0, color: Colors.white),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: const Offset(0, 3), // changes position of shadow
             ),
-          )
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Bom dia!",
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 12.0),
+              child: Text(usuario.nome,
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.bold)),
+            ),
+            const Text(
+              "Você ainda não realizou nenhuma consulta.",
+              style: TextStyle(
+                fontSize: 11,
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-    const Positioned(
-        left: 230,
+      const Positioned(
+        left: 262,
         top: 50,
         child: CircleAvatar(
           radius: 50,
-          backgroundImage:
-              NetworkImage("https://letrasjuridicas.com.br/product_images/AuthorDefaultImage.png"),
-        ))
-  ]);
+          backgroundImage: NetworkImage(
+              "https://letrasjuridicas.com.br/product_images/AuthorDefaultImage.png"),
+        ),
+      )
+    ],
+  );
 }
 
 Widget textoInformativo(BuildContext context) {
@@ -179,7 +181,7 @@ Widget doctoroptions(BuildContext context, Color colors, String img, text) {
       ));
 }
 
-Widget opcoesDoPaciente(BuildContext context) {
+Widget opcoesDoPaciente(BuildContext context, Usuario usuario) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
@@ -195,8 +197,8 @@ Widget opcoesDoPaciente(BuildContext context) {
           child: doctoroptions(context, colorConvert('#e03468'),
               "assets/images/icon/Hospital_Icon1.png", "CADASTRO"),
         ),
-        doctoroptions(context, azulHmv,
-            "assets/images/icon/anamnese.png", "ANAMNESE"),
+        doctoroptions(
+            context, azulHmv, "assets/images/icon/icon1.png", "ANAMNESE"),
         doctoroptions(context, colorConvert('#eb7a31'),
             "assets/images/icon/icon3.png", "MENSAGENS"),
         doctoroptions(context, colorConvert('#ee492a'),

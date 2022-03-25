@@ -1,19 +1,21 @@
 import 'package:challenge_hmv/data/dummy_paciente.dart';
 import 'package:challenge_hmv/models/paciente.dart';
 import 'package:challenge_hmv/models/usuario.dart';
-import 'package:challenge_hmv/pages/cadastrar_paciente_next2.dart';
+import 'package:challenge_hmv/pages/cadastrar_paciente_next3.dart';
+import 'package:challenge_hmv/utils/color.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class cadastrarPaciente extends StatefulWidget {
+class cadastrarPacienteNext2 extends StatefulWidget {
 
   final Usuario usuario;
-  const cadastrarPaciente({Key key, @required Usuario this.usuario}) : super(key: key);
+  const cadastrarPacienteNext2({Key key, @required Usuario this.usuario}) : super(key: key);
 
   @override
-  State<cadastrarPaciente> createState() => _cadastrarPacienteState();
+  State<cadastrarPacienteNext2> createState() => _cadastrarPacienteNext2State();
 }
 
-class _cadastrarPacienteState extends State<cadastrarPaciente> {
+class _cadastrarPacienteNext2State extends State<cadastrarPacienteNext2> {
   final List<Paciente> loadPaciente = DUMMY_PACIENTE;
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -28,7 +30,7 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => cadastrarPacienteNext2(usuario: this.widget.usuario)),
+      MaterialPageRoute(builder: (context) => cadastrarPacienteNext3(usuario: this.widget.usuario)),
     );
 
   }
@@ -61,11 +63,11 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
                         child: TextFormField(
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Nome",
+                            hintText: "Endereço descrição",
                             prefixIcon: Icon(Icons.person),
                           ),
-                          onSaved: (nome) =>
-                          cadastrarPaciente['nome'] = nome ?? '',
+                          onSaved: (enderecoDescricao) =>
+                          cadastrarPaciente['enderecoDescricao'] = enderecoDescricao ?? '',
                         ),
                       ),
                       Container(
@@ -78,11 +80,11 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
                         child: TextFormField(
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: "E-mail",
+                            hintText: "Logradouro",
                             prefixIcon: Icon(Icons.person),
                           ),
-                          onSaved: (email) =>
-                          cadastrarPaciente['email'] = email ?? '',
+                          onSaved: (logradouro) =>
+                          cadastrarPaciente['logradouro'] = logradouro ?? '',
                         ),
                       ),
                       Container(
@@ -95,11 +97,11 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
                         child: TextFormField(
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Nome completo da mãe",
+                              hintText: "Numero",
                               prefixIcon: Icon(Icons.app_registration),
                             ),
-                            onSaved: (nomeMae) =>
-                            cadastrarPaciente['nomeMae'] = nomeMae ?? ''),
+                            onSaved: (numero) =>
+                            cadastrarPaciente['numero'] = numero ?? ''),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -111,11 +113,59 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
                         child: TextFormField(
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Nome completo do pai",
+                              hintText: "Complemento",
                               prefixIcon: Icon(Icons.app_registration),
                             ),
-                            onSaved: (nomePai) =>
-                            cadastrarPaciente['nomePai'] = nomePai ?? ''),
+                            onSaved: (complemento) =>
+                            cadastrarPaciente['complemento'] = complemento ?? ''),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Cidade",
+                              prefixIcon: Icon(Icons.app_registration),
+                            ),
+                            onSaved: (cidade) =>
+                            cadastrarPaciente['cidade'] = cidade ?? ''),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Uf",
+                              prefixIcon: Icon(Icons.app_registration),
+                            ),
+                            onSaved: (uf) =>
+                            cadastrarPaciente['uf'] = uf ?? ''),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Cep",
+                              prefixIcon: Icon(Icons.app_registration),
+                            ),
+                            onSaved: (cep) =>
+                            cadastrarPaciente['cep'] = cep ?? ''),
                       ),
                       // Container(
                       //   margin: const EdgeInsets.only(top: 10),
@@ -161,12 +211,25 @@ class _cadastrarPacienteState extends State<cadastrarPaciente> {
                               borderRadius: BorderRadius.circular(90),
                             ),
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 110,
+                              horizontal: 120,
                               vertical: 10,
                             ),
                           ),
                         ),
                       const SizedBox(height: 5),
+                      ElevatedButton(
+                        onPressed: _proximoContinuarCadastro,
+                        child: const Text("VOLTAR"),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(90),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 120,
+                            vertical: 10,
+                          ),
+                        ),
+                      ),const SizedBox(height: 5),
                       ElevatedButton(
                         onPressed: _proximoContinuarCadastro,
                         child: const Text("CANCELAR"),

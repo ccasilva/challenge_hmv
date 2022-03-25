@@ -5,7 +5,6 @@ import 'package:challenge_hmv/widgets/herder_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -51,17 +50,21 @@ class _LoginPageState extends State<LoginPage> {
     print('Email recuperado => {$_emailSalvo}');
     print('Senha recuperada => {$_senhaSalva}');
 
-    if (_emailSalvo.isEmpty) {
+    if (_emailSalvo == null) {
+      setState(() => isLoading = false);
       _showErroLogim("Erro", "Usuário não cadastrado.");
     } else {
       if (_emailSalvo.compareTo(logarApp['usuario']) == 1) {
+        setState(() => isLoading = false);
         _showErroLogim("Erro", "Usuário não encontrado.");
       }
 
-      if (_senhaSalva.isEmpty) {
+      if (_senhaSalva == null) {
+        setState(() => isLoading = false);
         _showErroLogim("Erro", "Senha não encontrada.");
       } else {
         if (_senhaSalva.compareTo(logarApp['senha']) == 1) {
+          setState(() => isLoading = false);
           _showErroLogim("Erro", "A senha informada está incorreta.");
         }
         setState(() => isLoading = false);
@@ -79,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
+    print('Saiu da chamada - tela de HOME');
     setState(() => isLoading = false);
   }
 
