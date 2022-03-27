@@ -17,12 +17,8 @@ void initialization(BuildContext context) async {
 
 class MyApp extends StatelessWidget {
 
-
-
   @override
   Widget build(BuildContext context) {
-    //Autenticacao autenticacao;
-    //autenticacao.recuperarBancoDeDados();
 
     return MultiProvider(
       providers: [
