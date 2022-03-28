@@ -89,7 +89,7 @@ Widget informativoPaciente(BuildContext context, Usuario usuario) {
         child: CircleAvatar(
           radius: 50,
           backgroundImage: NetworkImage(
-              "https://letrasjuridicas.com.br/product_images/AuthorDefaultImage.png"),
+              "https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"),
         ),
       )
     ],
@@ -191,7 +191,7 @@ Widget opcoesDoPaciente(BuildContext context, Usuario usuario) {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => cadastrarPaciente()),
+              MaterialPageRoute(builder: (context) => cadastrarPaciente(usuario: usuario)),
             );
           },
           child: doctoroptions(context, colorConvert('#e03468'),

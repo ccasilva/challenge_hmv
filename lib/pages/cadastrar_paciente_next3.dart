@@ -1,4 +1,3 @@
-import 'package:challenge_hmv/data/dummy_paciente.dart';
 import 'package:challenge_hmv/models/paciente.dart';
 import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/utils/color.dart';
@@ -6,16 +5,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class cadastrarPacienteNext3 extends StatefulWidget {
-
   final Usuario usuario;
-  const cadastrarPacienteNext3({Key key, @required Usuario this.usuario}) : super(key: key);
+  final Paciente paciente;
+
+  const cadastrarPacienteNext3({
+    Key key,
+    @required Usuario this.usuario,
+    @required Paciente this.paciente,
+  }) : super(key: key);
 
   @override
   State<cadastrarPacienteNext3> createState() => _cadastrarPacienteNext3State();
 }
 
 class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
-  final List<Paciente> loadPaciente = DUMMY_PACIENTE;
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   Map<String, String> cadastrarPaciente = {
@@ -25,13 +28,13 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
     'senha': '',
   };
 
-  _proximoContinuarCadastro(){
-
+  _proximoContinuarCadastro() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => cadastrarPacienteNext3(usuario: this.widget.usuario)),
+      MaterialPageRoute(
+          builder: (context) =>
+              cadastrarPacienteNext3(usuario: this.widget.usuario)),
     );
-
   }
 
   @override
@@ -66,7 +69,7 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                             prefixIcon: Icon(Icons.person),
                           ),
                           onSaved: (codPais) =>
-                          cadastrarPaciente['codPais'] = codPais ?? '',
+                              cadastrarPaciente['codPais'] = codPais ?? '',
                         ),
                       ),
                       Container(
@@ -83,7 +86,7 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                             prefixIcon: Icon(Icons.person),
                           ),
                           onSaved: (codArea) =>
-                          cadastrarPaciente['codArea'] = codArea ?? '',
+                              cadastrarPaciente['codArea'] = codArea ?? '',
                         ),
                       ),
                       Container(
@@ -96,11 +99,11 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                         child: TextFormField(
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Numero",
+                              hintText: "Telefone",
                               prefixIcon: Icon(Icons.app_registration),
                             ),
-                            onSaved: (numero) =>
-                            cadastrarPaciente['numero'] = numero ?? ''),
+                            onSaved: (telefone) =>
+                                cadastrarPaciente['telefone'] = telefone ?? ''),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -115,8 +118,9 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                               hintText: "Descrição",
                               prefixIcon: Icon(Icons.app_registration),
                             ),
-                            onSaved: (descricao) =>
-                            cadastrarPaciente['descricao'] = descricao ?? ''),
+                            onSaved: (desTelefone) =>
+                                cadastrarPaciente['desTelefone'] =
+                                    desTelefone ?? ''),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -132,7 +136,8 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                               prefixIcon: Icon(Icons.app_registration),
                             ),
                             onSaved: (codConvenio) =>
-                            cadastrarPaciente['codConvenio'] = codConvenio ?? ''),
+                                cadastrarPaciente['codConvenio'] =
+                                    codConvenio ?? ''),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -148,7 +153,8 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                               prefixIcon: Icon(Icons.app_registration),
                             ),
                             onSaved: (desConvenio) =>
-                            cadastrarPaciente['desConvenio'] = desConvenio ?? ''),
+                                cadastrarPaciente['desConvenio'] =
+                                    desConvenio ?? ''),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -164,9 +170,9 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                               prefixIcon: Icon(Icons.app_registration),
                             ),
                             onSaved: (numCartConvenio) =>
-                            cadastrarPaciente['numCartConvenio'] = numCartConvenio ?? ''),
+                                cadastrarPaciente['numCartConvenio'] =
+                                    numCartConvenio ?? ''),
                       ),
-
                       const SizedBox(height: 20),
                       if (isLoading)
                         const CircularProgressIndicator()
@@ -197,7 +203,8 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                             vertical: 10,
                           ),
                         ),
-                      ),const SizedBox(height: 5),
+                      ),
+                      const SizedBox(height: 5),
                       ElevatedButton(
                         onPressed: _proximoContinuarCadastro,
                         child: const Text("CANCELAR"),

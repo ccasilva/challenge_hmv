@@ -1,13 +1,13 @@
 import 'dart:convert';
+import 'package:challenge_hmv/end_point/end_point.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:challenge_hmv/models/erro_tratado.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class Autenticacao with ChangeNotifier {
-  static const _url = "http://127.0.0.1:8081/api/pacientes/";
-  static const _urlConsulta =
-      "http://127.0.0.1:8081/api/pacientes/035df5cb-c542-43ba-9249-7ead0381c0e8";
+  static const _url = URL_HMV + "/api/pacientes";
+  static const _urlConsulta = "";
 
   salvaPrefs(
       String id, String nome, String email, String senha, String cpf) async {
@@ -44,6 +44,8 @@ class Autenticacao with ChangeNotifier {
       String nome, String cpf, String email, String senha) async {
     print(
         '################### Inicio do cadastro registro ###########################');
+
+    print("URL => {$_url}");
 
     final response = await http.post(
       Uri.parse(_url),
