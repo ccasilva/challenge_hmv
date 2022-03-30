@@ -91,7 +91,7 @@ class Autenticacao with ChangeNotifier {
     print("URL => $_urlCadastroPaciente");
 
 
-    final response = await http.put(
+    final response = await http.patch(
       Uri.parse(_urlCadastroPaciente),
       headers: {"Content-Type": "application/json",
         "Authorization": "Bearer $token"},
