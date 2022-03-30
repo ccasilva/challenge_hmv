@@ -6,6 +6,7 @@ import 'package:challenge_hmv/utils/color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class cadastrarPacienteNext3 extends StatefulWidget {
   final Usuario usuario;
@@ -90,10 +91,11 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
     );
   }
 
-  Future<void> _salvarDadosDoPaciente(Usuario usuario, Paciente paciente2) async {
-
+  Future<void> _salvarDadosDoPaciente(
+      Usuario usuario, Paciente paciente2) async {
     _formKey.currentState?.save();
     Autenticacao autenticar = Provider.of(context, listen: false);
+    String _token;
 
     Paciente paciente = Paciente(
       nome: paciente2.nome,
@@ -117,28 +119,47 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
       datValidade: cadastrarPaciente['datValidade'],
     );
 
-    if(paciente.codArea == ''){
+    if (paciente.codArea == '') {
       _showErroPaciente("Erro", "Favor, preencher o código da Area");
-    }else if(paciente.codPais == ''){
+    } else if (paciente.codPais == '') {
       _showErroPaciente("Erro", "Favor, preencher o código do pais");
-    }else if(paciente.telefone == ''){
+    } else if (paciente.telefone == '') {
       _showErroPaciente("Erro", "Favor, preencher o telefone");
-    }else if(paciente.codConvenio == ''){
+    } else if (paciente.codConvenio == '') {
       _showErroPaciente("Erro", "Favor, preencher o código do convênio.");
-    }else if(paciente.desConvenio == ''){
+    } else if (paciente.desConvenio == '') {
       _showErroPaciente("Erro", "Favor, preencher a descrição do convênio.");
-    }else if(paciente.numCartConvenio == ''){
-      _showErroPaciente("Erro", "Favor, preencher o número da carteira do convênio.");
-    }else if(paciente.datValidade == ''){
-      _showErroPaciente("Erro", "Favor, preencher a data de validade convênio.");
-    }else{
+    } else if (paciente.numCartConvenio == '') {
+      _showErroPaciente(
+          "Erro", "Favor, preencher o número da carteira do convênio.");
+    } else if (paciente.datValidade == '') {
+      _showErroPaciente(
+          "Erro", "Favor, preencher a data de validade convênio.");
+    } else {
       try {
-        await autenticar.gerarToken();
+        await autenticar.gerarToken(usuario);
         //await autenticar.registrarCadPacienteCompleto (paciente, usuario);
         //_showPacienteSucesso('Aviso','Registro cadastro com sucesso!');
         print("Finalizou!");
       } catch (e) {
-        _showErroRegPaciente('Ocorreu um Erro', e.toString());
+        _showErroRegPaciente('Erro ao autenticar', e.toString());
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        _token = prefs.getString("TOKEN");
+      });
+
+      try {
+        await autenticar.registrarCadPacienteCompleto(
+          paciente,
+          usuario,
+          _token,
+        );
+        //_showPacienteSucesso('Aviso','Registro cadastro com sucesso!');
+        print("Finalizou!");
+      } catch (e) {
+        _showErroRegPaciente('Erro ao autenticar', e.toString());
       }
     }
   }
@@ -301,7 +322,8 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                         const CircularProgressIndicator()
                       else
                         ElevatedButton(
-                          onPressed: () => _salvarDadosDoPaciente(widget.usuario, widget.paciente),
+                          onPressed: () => _salvarDadosDoPaciente(
+                              widget.usuario, widget.paciente),
                           child: const Text("SALVAR"),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -315,7 +337,7 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
                         ),
                       const SizedBox(height: 5),
                       ElevatedButton(
-                        onPressed: (){},
+                        onPressed: () {},
                         child: const Text("VOLTAR"),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

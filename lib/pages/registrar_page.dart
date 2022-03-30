@@ -33,7 +33,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => LoginPage()));
             },
-            child: const Text('Fechar'),
+            child: const Text('OK'),
           )
         ],
       ),
