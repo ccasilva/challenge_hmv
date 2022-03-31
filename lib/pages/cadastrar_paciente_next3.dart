@@ -75,7 +75,7 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
     );
   }
 
-  void _showPacienteSucesso(String titulo, String msg) {
+  void _showPacienteSucesso(String titulo, String msg, Usuario usuario) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -83,7 +83,12 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
         content: Text(msg),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(usuario: usuario)),
+              );
+            },
             child: const Text('OK'),
           )
         ],
@@ -138,8 +143,6 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
     } else {
       try {
         await autenticar.gerarToken(usuario);
-        //await autenticar.registrarCadPacienteCompleto (paciente, usuario);
-        //_showPacienteSucesso('Aviso','Registro cadastro com sucesso!');
         print("Finalizou!");
       } catch (e) {
         _showErroRegPaciente('Erro ao autenticar', e.toString());
@@ -156,8 +159,9 @@ class _cadastrarPacienteNext3State extends State<cadastrarPacienteNext3> {
           usuario,
           _token,
         );
-        //_showPacienteSucesso('Aviso','Registro cadastro com sucesso!');
-        print("Finalizou!");
+
+        _showPacienteSucesso('Aviso','Paciente cadastrado com sucesso!', usuario);
+
       } catch (e) {
         _showErroRegPaciente('Erro ao autenticar', e.toString());
       }

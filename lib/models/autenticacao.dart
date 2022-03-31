@@ -87,9 +87,7 @@ class Autenticacao with ChangeNotifier {
         '################### Inicio do cadastro paciente ###########################');
 
     String _urlCadastroPaciente = URL_HMV + "/api/pacientes/" + usuario.id;
-
     print("URL => $_urlCadastroPaciente");
-
 
     final response = await http.patch(
       Uri.parse(_urlCadastroPaciente),
@@ -125,16 +123,13 @@ class Autenticacao with ChangeNotifier {
         }
       }),
     );
-    final body = jsonDecode(response.body);
 
+    final body = jsonDecode(response.body);
     print(body);
 
-    // if (body['id_paciente'] == null) {
-    //   throw ErroTratado('ERRO_CADASTRO');
-    // } else {
-    //   print('Id criado => ${body['id_paciente']}');
-    //   salvaPrefs(body['id_paciente'], nome, email, senha, cpf);
-    // }
+    if (body['id_paciente'] == null) {
+       throw ErroTratado('ERRO_CAR_COMPLETO');
+    }
 
     print(
         '################### Fim do cadastro paciente ###########################');

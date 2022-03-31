@@ -1,5 +1,6 @@
 import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/pages/cadastrar_paciente.dart';
+import 'package:challenge_hmv/pages/solicita_atendimento_emergencia.dart';
 import 'package:challenge_hmv/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'bottombar.dart';
@@ -197,12 +198,20 @@ Widget opcoesDoPaciente(BuildContext context, Usuario usuario) {
           child: doctoroptions(context, colorConvert('#e03468'),
               "assets/images/icon/Hospital_Icon1.png", "CADASTRO"),
         ),
-        doctoroptions(
-            context, azulHmv, "assets/images/icon/icon1.png", "ANAMNESE"),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => solicitaAtendimentoEmergencia(usuario: usuario)),
+            );
+          },
+          child: doctoroptions(
+              context, azulHmv, "assets/images/icon/icon1.png", " SOLICITAR \n ATENDIMENTO"),
+        ),
         doctoroptions(context, colorConvert('#eb7a31'),
             "assets/images/icon/icon3.png", "MENSAGENS"),
         doctoroptions(context, colorConvert('#ee492a'),
-            "assets/images/icon/icon4.png", "FILA"),
+            "assets/images/icon/icon4.png", " ACOMPANHAR \n FILA"),
       ],
     ),
   );

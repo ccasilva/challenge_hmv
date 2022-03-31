@@ -70,7 +70,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
         autorizarPaciente['email'],
         autorizarPaciente['senha'],
       );
-      _showPacienteSucesso('Aviso','Registro cadastro com sucesso!');
+      _showPacienteSucesso('Aviso','Paciente registrado com sucesso!');
     } catch (e) {
       _showErroRegPaciente('Ocorreu um Erro', e.toString());
     }
