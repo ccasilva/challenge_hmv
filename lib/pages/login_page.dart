@@ -1,9 +1,11 @@
+import 'package:challenge_hmv/models/autenticacao.dart';
 import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/pages/registrar_page.dart';
 import 'package:challenge_hmv/utils/color.dart';
 import 'package:challenge_hmv/widgets/herder_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
@@ -20,26 +22,29 @@ class _LoginPageState extends State<LoginPage> {
   void _showErroLogim(String titulo, String msg) {
     showDialog(
       context: context,
-      builder: (ctx) =>
-          AlertDialog(
-            title: Text(titulo),
-            content: Text(msg),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Fechar'),
-              )
-            ],
-          ),
+      builder: (ctx) => AlertDialog(
+        title: Text(titulo),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          )
+        ],
+      ),
     );
   }
 
   _logarNoApp() async {
     setState(() => isLoading = true);
     _formKey.currentState?.save();
+    Autenticacao autenticar = Provider.of(context, listen: false);
 
     String _emailSalvo;
     String _senhaSalva;
+    String _wID;
+    String _wNome;
+    String _wSenha;
 
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -51,8 +56,45 @@ class _LoginPageState extends State<LoginPage> {
     print('Senha recuperada => {$_senhaSalva}');
 
     if (_emailSalvo == null) {
-      setState(() => isLoading = false);
-      _showErroLogim("Erro", "Usuário não cadastrado.");
+
+      Usuario usuario = Usuario(
+        id: null,
+        nome: null,
+        email: logarApp['usuario'],
+        senha: logarApp['senha'],
+      );
+
+      try {
+        await autenticar.gerarToken(usuario);
+        print("Finalizou!");
+      } catch (e) {
+        _showErroLogim('Erro ao autenticar', e.toString());
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        _wID = prefs.getString("ID");
+        _wNome = prefs.getString("NOME");
+      });
+
+      Usuario usuario1 = Usuario(
+        id: _wID,
+        nome: _wNome,
+        email: logarApp['usuario'],
+        senha: logarApp['senha'],
+      );
+
+      print(usuario1.senha);
+        print(usuario1.email);
+        print(usuario1.nome);
+      print(usuario1.id);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home(usuario: usuario1)),
+      );
+
+
     } else {
       if (_emailSalvo.compareTo(logarApp['usuario']) == 1) {
         setState(() => isLoading = false);
@@ -73,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
           id: prefs.getString("ID"),
           nome: prefs.getString("NOME"),
           email: prefs.getString("EMAIL"),
-          senha: prefs.getString("SENHA"),);
+          senha: prefs.getString("SENHA"),
+        );
 
         Navigator.push(
           context,
@@ -88,10 +131,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isKeyboard = MediaQuery
-        .of(context)
-        .viewInsets
-        .bottom != 0;
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -122,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.email),
                           ),
                           onSaved: (usuario) =>
-                          logarApp['usuario'] = usuario ?? '',
+                              logarApp['usuario'] = usuario ?? '',
                         ),
                       ),
                       Container(

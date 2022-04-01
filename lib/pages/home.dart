@@ -179,7 +179,7 @@ Widget doctoroptions(BuildContext context, Color colors, String img, text) {
             ],
           )
         ],
-      ));
+      ),);
 }
 
 Widget opcoesDoPaciente(BuildContext context, Usuario usuario) {

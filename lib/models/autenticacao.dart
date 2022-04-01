@@ -172,6 +172,11 @@ class Autenticacao with ChangeNotifier {
     } else {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("TOKEN", body['access_token']);
+      await prefs.setString("ID", body['id_user']);
+      await prefs.setString("NOME", body['primeiro_nome']);
+      await prefs.setString("EMAIL", usuario.email);
+      await prefs.setString("SENHA", usuario.senha);
+      await prefs.setString("CPF", body['cpf']);
     }
 
     print(

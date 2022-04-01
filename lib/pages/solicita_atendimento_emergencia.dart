@@ -24,16 +24,36 @@ class _solicitaAtendimentoEmergenciaState
 
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  List<DropdownMenuItem<int>> _listaItensDores = List();
-  Map<String, String> cadastrarPaciente = {
-    'codPais': '',
-    'codArea': '',
-    'telefone': '',
-    'desTelefone': '',
-    'codConvenio': '',
-    'desConvenio': '',
-    'numCartConvenio': '',
-    'datValidade': '',
+  int wDor;
+  int wnivelDor;
+  int wsintoma1;
+  int wsintoma2;
+  int whabito1;
+  int whabito2;
+  int wtraumatico1;
+
+  List<DropdownMenuItem<int>> _listaItensDores1 = List();
+  List<DropdownMenuItem<int>> _listaItensDores2 = List();
+  List<DropdownMenuItem<int>> _listaItensTraumaticos1 = List();
+  List<DropdownMenuItem<int>> _listaItensTraumaticos2 = List();
+  List<DropdownMenuItem<int>> _listaItensItensAssoDor1 = List();
+  List<DropdownMenuItem<int>> _listaItensItensAssoDor2 = List();
+  List<DropdownMenuItem<int>> _listaItensSintomas1 = List();
+  List<DropdownMenuItem<int>> _listaItensSintomas2 = List();
+  List<DropdownMenuItem<int>> _listaItensHabitos1 = List();
+  List<DropdownMenuItem<int>> _listaItensHabitos2 = List();
+
+  Map<String, String> parametrosSolEmergencia = {
+    'relatoPaciente': '',
+    'dor': '',
+    'nivelDor': '',
+    'sintoma1': '',
+    'sintoma2': '',
+    'habito1': '',
+    'habito2': '',
+    'traumatico1': '',
+    'traumatico2': '',
+
   };
 
   _cancelarCadastro(Usuario usuario) {
@@ -96,82 +116,28 @@ class _solicitaAtendimentoEmergenciaState
     );
   }
 
-  Future<void> _salvarDadosDoPaciente(
-      Usuario usuario, Paciente paciente2) async {
+  Future<void> _solicitaAtendimentoEmergencia() async {
+
+    print('Entrou aqui');
     _formKey.currentState?.save();
     Autenticacao autenticar = Provider.of(context, listen: false);
     String _token;
-    List<DropdownMenuItem<String>> _listaItensDores1 = [
-      DropdownMenuItem(child: Text("USA"), value: "USA"),
-      DropdownMenuItem(child: Text("Canada"), value: "Canada"),
-      DropdownMenuItem(child: Text("Brazil"), value: "Brazil"),
-      DropdownMenuItem(child: Text("England"), value: "England"),
-    ];
 
-    Paciente paciente = Paciente(
-      nome: paciente2.nome,
-      email: paciente2.email,
-      nomeMae: paciente2.nomeMae,
-      nomePai: paciente2.nomePai,
-      enderecoDescricao: cadastrarPaciente['enderecoDescricao'],
-      logradouro: cadastrarPaciente['logradouro'],
-      numero: cadastrarPaciente['numero'],
-      complemento: cadastrarPaciente['complemento'],
-      cidade: cadastrarPaciente['cidade'],
-      uf: cadastrarPaciente['uf'],
-      cep: cadastrarPaciente['cep'],
-      codPais: cadastrarPaciente['codPais'],
-      codArea: cadastrarPaciente['codArea'],
-      telefone: cadastrarPaciente['telefone'],
-      desTelefone: cadastrarPaciente['desTelefone'],
-      codConvenio: cadastrarPaciente['codConvenio'],
-      desConvenio: cadastrarPaciente['desConvenio'],
-      numCartConvenio: cadastrarPaciente['numCartConvenio'],
-      datValidade: cadastrarPaciente['datValidade'],
-    );
+    print('wDor {$wDor}');
+    print('wnivelDor {$wnivelDor}');
+    print('wsintoma1 {$wsintoma1}');
+    print('wsintoma2 {$wsintoma2}');
+    print('whabito1 {$whabito1}');
+    print('whabito2 {$whabito2}');
+    print('wtraumatico1 {$wtraumatico1}');
+    print(parametrosSolEmergencia['relatoPaciente']);
 
-    if (paciente.codArea == '') {
-      _showErroPaciente("Erro", "Favor, preencher o código da Area");
-    } else if (paciente.codPais == '') {
-      _showErroPaciente("Erro", "Favor, preencher o código do pais");
-    } else if (paciente.telefone == '') {
-      _showErroPaciente("Erro", "Favor, preencher o telefone");
-    } else if (paciente.codConvenio == '') {
-      _showErroPaciente("Erro", "Favor, preencher o código do convênio.");
-    } else if (paciente.desConvenio == '') {
-      _showErroPaciente("Erro", "Favor, preencher a descrição do convênio.");
-    } else if (paciente.numCartConvenio == '') {
-      _showErroPaciente(
-          "Erro", "Favor, preencher o número da carteira do convênio.");
-    } else if (paciente.datValidade == '') {
-      _showErroPaciente(
-          "Erro", "Favor, preencher a data de validade convênio.");
-    } else {
-      try {
-        await autenticar.gerarToken(usuario);
-        print("Finalizou!");
-      } catch (e) {
-        _showErroRegPaciente('Erro ao autenticar', e.toString());
-      }
 
-      final prefs = await SharedPreferences.getInstance();
-      setState(() {
-        _token = prefs.getString("TOKEN");
-      });
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _token = prefs.getString("TOKEN");
+    });
 
-      try {
-        await autenticar.registrarCadPacienteCompleto(
-          paciente,
-          usuario,
-          _token,
-        );
-
-        _showPacienteSucesso(
-            'Aviso', 'Paciente cadastrado com sucesso!', usuario);
-      } catch (e) {
-        _showErroRegPaciente('Erro ao autenticar', e.toString());
-      }
-    }
   }
 
   @override
@@ -179,17 +145,87 @@ class _solicitaAtendimentoEmergenciaState
     // TODO: implement initState
     super.initState();
     _carregaItensDoresDropdown();
+    _carregaItensSintomasDropdown();
+    _carregaItensHabitosDropdown();
+    _carregaItensEveTraumaticosDropdown();
+    _carregaItensItensAssoDorDropdown();
+  }
+
+  _carregaItensItensAssoDorDropdown(){
+    _listaItensItensAssoDor1.add(
+        const DropdownMenuItem(child: Text("Ligeira"), value: 1)
+    );
+    _listaItensItensAssoDor1.add(
+        const DropdownMenuItem(child: Text("Moderada"), value: 2)
+    );
+    _listaItensItensAssoDor1.add(
+        const DropdownMenuItem(child: Text("Intensa"), value: 3)
+    );
+    _listaItensItensAssoDor1.add(
+        const DropdownMenuItem(child: Text("Maxima"), value: 4)
+    );
+    _listaItensItensAssoDor2 = _listaItensItensAssoDor1;
+  }
+
+  _carregaItensEveTraumaticosDropdown(){
+    _listaItensTraumaticos1.add(
+        const DropdownMenuItem(child: Text("Qd de aviao"), value: 1)
+    );
+    _listaItensTraumaticos1.add(
+        const DropdownMenuItem(child: Text("Qd da escada"), value: 3)
+    );
+    _listaItensTraumaticos1.add(
+        const DropdownMenuItem(child: Text("Qd de moto"), value: 1)
+    );
+    _listaItensTraumaticos1.add(
+        const DropdownMenuItem(child: Text("atropelamento"), value: 1)
+    );
+  }
+
+  _carregaItensHabitosDropdown(){
+    _listaItensHabitos1.add(
+        const DropdownMenuItem(child: Text("fumante"), value: 1)
+    );
+    _listaItensHabitos1.add(
+        const DropdownMenuItem(child: Text("Corrida"), value: 2)
+    );
+    _listaItensHabitos2 = _listaItensHabitos1;
+  }
+
+  _carregaItensSintomasDropdown(){
+    _listaItensSintomas1.add(
+        const DropdownMenuItem(child: Text("febre"), value: 3)
+    );
+    _listaItensSintomas1.add(
+        const DropdownMenuItem(child: Text("dor de cabeca"), value: 1)
+    );
+    _listaItensSintomas1.add(
+        const DropdownMenuItem(child: Text("dor no peito"), value: 2)
+    );
+    _listaItensSintomas2 = _listaItensSintomas1;
   }
 
   _carregaItensDoresDropdown(){
-    _listaItensDores.add(
-      DropdownMenuItem(child: Text("Dor1"), value: 1)
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("Braços"), value: 1)
+    );
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("Pernas"), value: 2)
+    );
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("Barriga"), value: 3)
+    );
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("Peitoral"), value: 4)
+    );
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("costas"), value: 5)
+    );
+    _listaItensDores1.add(
+        const DropdownMenuItem(child: Text("Cabeça"), value: 6)
     );
 
-    _listaItensDores.add(
-        DropdownMenuItem(child: Text("Dor2"), value: 2)
-    );
-
+    _listaItensDores2 = _listaItensDores1;
   }
 
   @override
@@ -223,21 +259,24 @@ class _solicitaAtendimentoEmergenciaState
                             hintText: "Relato motivo do paciente",
                             prefixIcon: Icon(Icons.art_track_outlined),
                           ),
-                          onSaved: (codPais) =>
-                              cadastrarPaciente['codPais'] = codPais ?? '',
+                          onSaved: (relatoPaciente) =>
+                          parametrosSolEmergencia['relatoPaciente'] = relatoPaciente ?? '',
                         ),
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
-                                },
+                                value: wDor,
+                                iconSize: 15,
+                                onChanged: (dor) {
+                                  setState(() {
+                                    wDor = dor ?? '';
+                                  });
+                                  },
                                 decoration: InputDecoration(
                                     labelText: 'Lista de dores',
                                     isDense: true,
@@ -247,7 +286,7 @@ class _solicitaAtendimentoEmergenciaState
                                 validator: (value) {
                                   return 'Selecione uma categoria';
                                 },
-                                items: _listaItensDores,
+                                items: _listaItensDores1,
 
                               ),
                             ),
@@ -256,20 +295,23 @@ class _solicitaAtendimentoEmergenciaState
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
+                                value: wnivelDor,
+                                iconSize: 15,
+                                onChanged: (nivelDor) {
+                                  setState(() {
+                                    wnivelDor = nivelDor ?? '';
+                                  });
                                 },
                                 decoration: InputDecoration(
-                                    labelText: 'Lista de dores',
+                                    labelText: 'Nivel da dor',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                         BorderRadius.circular(15))),
                                 validator: (value) {
-                                  return 'Selecione uma categoria';
+                                  return 'Selecione';
                                 },
-                                items: _listaItensDores,
+                                items: _listaItensItensAssoDor1,
 
                               ),
                             ),
@@ -283,21 +325,23 @@ class _solicitaAtendimentoEmergenciaState
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
+                                value: wsintoma1,
+                                iconSize: 15,
+                                onChanged: (sintoma1) {
+                                  setState(() {
+                                    wsintoma1 = sintoma1 ?? '';
+                                  });
                                 },
                                 decoration: InputDecoration(
-                                    labelText: 'Lista de Sintomas',
+                                    labelText: 'Sintomas',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                         BorderRadius.circular(15))),
                                 validator: (value) {
-                                  return 'Selecione uma categoria';
+                                  return 'Selecione';
                                 },
-                                items: _listaItensDores,
-
+                                items: _listaItensSintomas1,
                               ),
                             ),
                           ),
@@ -305,21 +349,23 @@ class _solicitaAtendimentoEmergenciaState
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
+                                value: wsintoma2,
+                                iconSize: 15,
+                                onChanged: (sintoma2) {
+                                  setState(() {
+                                    wsintoma2 = sintoma2 ?? '';
+                                  });
                                 },
                                 decoration: InputDecoration(
-                                    labelText: 'Lista de Sintomas',
+                                    labelText: 'Sintomas',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                         BorderRadius.circular(15))),
                                 validator: (value) {
-                                  return 'Selecione uma categoria';
+                                  return 'Selecione';
                                 },
-                                items: _listaItensDores,
-
+                                items: _listaItensSintomas1,
                               ),
                             ),
                           )
@@ -332,20 +378,23 @@ class _solicitaAtendimentoEmergenciaState
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
+                                value: whabito1,
+                                iconSize: 15,
+                                onChanged: (habito1) {
+                                  setState(() {
+                                    whabito1 = habito1 ?? '';
+                                  });
                                 },
                                 decoration: InputDecoration(
-                                    labelText: 'Lista de habitos',
+                                    labelText: 'Habitos',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                         BorderRadius.circular(15))),
                                 validator: (value) {
-                                  return 'Selecione uma categoria';
+                                  return 'Selecione';
                                 },
-                                items: _listaItensDores,
+                                items: _listaItensHabitos1,
 
                               ),
                             ),
@@ -354,20 +403,23 @@ class _solicitaAtendimentoEmergenciaState
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
+                                value: whabito2,
+                                iconSize: 15,
+                                onChanged: (habito2) {
+                                  setState(() {
+                                    whabito2 = habito2 ?? '';
+                                  });
                                 },
                                 decoration: InputDecoration(
-                                    labelText: 'Lista de habitos',
+                                    labelText: 'Habitos',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                         BorderRadius.circular(15))),
                                 validator: (value) {
-                                  return 'Selecione uma categoria';
+                                  return 'Selecione';
                                 },
-                                items: _listaItensDores,
+                                items: _listaItensHabitos1,
 
                               ),
                             ),
@@ -377,50 +429,31 @@ class _solicitaAtendimentoEmergenciaState
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
-                                },
-                                decoration: InputDecoration(
-                                    labelText: 'Eventos traumaticos',
-                                    isDense: true,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(15))),
-                                validator: (value) {
-                                  return 'Selecione uma categoria';
-                                },
-                                items: _listaItensDores,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: DropdownButtonFormField<int>(
+                                  value: wtraumatico1,
+                                  iconSize: 15,
+                                  onChanged: (traumatico1) {
+                                    setState(() {
+                                      wtraumatico1 = traumatico1 ?? '';
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                      labelText: 'Traumaticos',
+                                      isDense: true,
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(15))),
+                                  validator: (value) {
+                                    return 'Selecione';
+                                  },
+                                  items: _listaItensTraumaticos1,
 
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: DropdownButtonFormField<int>(
-                                iconSize: 25,
-                                onChanged: (valor){
-                                  print("Valor drop: $valor");
-                                },
-                                decoration: InputDecoration(
-                                    labelText: 'Eventos traumaticos',
-                                    isDense: true,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(15))),
-                                validator: (value) {
-                                  return 'Selecione uma categoria';
-                                },
-                                items: _listaItensDores,
-
-                              ),
-                            ),
-                          )
                         ],
                       ),
                       const SizedBox(height: 40),
@@ -428,7 +461,7 @@ class _solicitaAtendimentoEmergenciaState
                         const CircularProgressIndicator()
                       else
                         ElevatedButton(
-                          onPressed: () => {},
+                          onPressed: _solicitaAtendimentoEmergencia,
                           child: const Text("SALVAR"),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -440,21 +473,6 @@ class _solicitaAtendimentoEmergenciaState
                             ),
                           ),
                         ),
-                      //const SizedBox(height: 5),
-                      // ElevatedButton(
-                      //   onPressed: () {},
-                      //   child: const Text("VOLTAR"),
-                      //   style: ElevatedButton.styleFrom(
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(90),
-                      //     ),
-                      //     padding: const EdgeInsets.symmetric(
-                      //       horizontal: 120,
-                      //       vertical: 10,
-                      //     ),
-                      //   ),
-                      // ),
-                      //const SizedBox(height: 5),
                       ElevatedButton(
                         onPressed: () => _cancelarCadastro(widget.usuario),
                         child: const Text("CANCELAR"),
