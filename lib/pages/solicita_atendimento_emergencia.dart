@@ -1,5 +1,4 @@
 import 'package:challenge_hmv/models/autenticacao.dart';
-import 'package:challenge_hmv/models/paciente.dart';
 import 'package:challenge_hmv/models/usuario.dart';
 import 'package:challenge_hmv/pages/home.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +94,7 @@ class _solicitaAtendimentoEmergenciaState
     );
   }
 
-  void _showPacienteSucesso(String titulo, String msg, Usuario usuario) {
+  void _showAtendimento(String titulo, String msg, Usuario usuario) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -137,6 +136,8 @@ class _solicitaAtendimentoEmergenciaState
     setState(() {
       _token = prefs.getString("TOKEN");
     });
+
+    _showAtendimento('Aviso','Solicitacão de atendimento enviada com sucesso!', widget.usuario);
 
   }
 
